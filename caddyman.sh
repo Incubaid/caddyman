@@ -5,6 +5,14 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
+if [ -n "$GOPATH" ];
+then
+    echo "Using GPATH : $GOPATH"
+else
+    echo "Setting GOPATH: to ~/go/"
+    export GOPATH=~/go/
+fi
+
 CADDY_GO_PACKAGE=github.com/mholt/caddy
 echo -ne "Ensuring Caddy is up2date \r"
 go get $CADDY_GO_PACKAGE
