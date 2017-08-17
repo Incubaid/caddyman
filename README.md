@@ -116,3 +116,32 @@ usage: cadyman list                           (list available plugins)
     caddy
     ```
     ![File Manager](assets/fileman.png)
+
+- **hugo**
+[hugo](http://gohugo.io/) plugin is a filemanager plugin in its essence
+it allows for displaying hugo's generated static files as well as updating them
+
+    ```
+    ./caddyman install hugo
+    git clone ssh://git@docs.greenitglobe.com:10022/ThreeFold/www_threefold2.0.git
+    cd www_threefold2.0.git/
+    cat > Caddyfile
+
+        http://localhost:2015
+
+                root www.threefoldtoken.com/en
+                hugo www.threefoldtoken.com {
+                    database db
+                    no_auth
+                }
+
+
+        ctrl + D
+
+        # Run caddy
+        caddy
+    ```
+
+    ![File Manager](assets/header.png)
+    
+    ![File Manager](assets/home.png)

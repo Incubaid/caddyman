@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Dictionary with plugin name as key, URL as value
 declare -A plugins_urls=(
     ["realip"]="github.com/captncraig/caddy-realip"
     ["git"]="github.com/abiosoft/caddy-git"
@@ -37,12 +38,13 @@ declare -A plugins_urls=(
     ["iyo"]="github.com/itsyouonline/caddy-integration/oauth"
 )
 
+# Dictionary with plugin name as key, directive as value
+# This holds directives for plugins that should have directive added to caddy!
 declare -A plugins_directives=(
     ["iyo"]="oauth"
 )
 
-
-
+# Use $GOPATH or ~/go if not set!
 check_go_path(){
     if [ -n "$GOPATH" ];
         then
@@ -53,6 +55,7 @@ check_go_path(){
        fi
 }
 
+# Update Caddy source
 update_caddy(){
     CADDY_GO_PACKAGE=github.com/mholt/caddy
     echo -ne "Ensuring Caddy is up2date \r"
@@ -61,11 +64,14 @@ update_caddy(){
     echo ""
 }
 
+
+# List all supported plugin names and URLS
 list(){
     for plugin in "${!plugins_urls[@]}"; do echo "[$plugin] ${plugins_urls[$plugin]}"; done
 }
 
 
+# Print usage message
 show_usage(){
     echo "usage: cadyman list                           (list available plugins)"
     echo "               install plugin_name            (install plugin by its name)"
@@ -74,12 +80,11 @@ show_usage(){
 }
 
 
+# Install plugin given its name or display error message if name not in our supported plugins
 install_plugin_by_name(){
     if [ -z ${plugins_urls[$1]} ]; then
         echo "Plugin name is not recognized"
     else
-        check_go_path
-        update_caddy
          if [ -z ${plugins_directives[$1]} ]; then
             install ${plugins_urls[$1]} ""
          else
@@ -88,12 +93,19 @@ install_plugin_by_name(){
     fi
 }
 
-install(){
-    url=$1
-    directive=$2
-    echo $url
+# Install Hugo (only executed if user tries to install hugo plugin)
+install_hugo(){
+
+    echo -ne "Installing Hugo \r"
+    go get github.com/gohugoio/hugo
+    go get -u  github.com/gohugoio/hugo
+    echo -ne "Installing Hugo [SUCCESS]"
+    echo ""
+}
+
+install_plugin(){
     echo -ne "Getting plugin \r"
-    go get $url
+    go get $1
 
     if [ ! $? == 0 ]; then
         exit $?
@@ -101,9 +113,16 @@ install(){
         echo -ne "Getting plugin [SUCCESS]\r"
         echo ""
     fi
+}
+
+update_caddy_plugin_imports_and_directives(){
+
     CADDY_PATH=$GOPATH/src/github.com/mholt/caddy
     PLUGINS_FILE=$CADDY_PATH/caddyhttp/httpserver/plugin.go
     MAIN_FILE=$CADDY_PATH/caddy/caddymain/run.go
+
+    url=$1
+    directive=$2
 
     echo -ne 'Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go\r'
     sed -i "s%This is where other plugins get plugged in (imported)%This is where other plugins get plugged in (imported)\n_ \"$url\"%g" $MAIN_FILE
@@ -116,6 +135,11 @@ install(){
         echo -ne "Updating plugin directive in $PLUGINS_FILE [SUCCESS]\r"
         echo ""
     fi
+
+}
+
+rebuild_caddy(){
+    CADDY_PATH=$GOPATH/src/github.com/mholt/caddy
 
     cd $CADDY_PATH/caddy
     echo -ne "Rebuilding caddy binary\r"
@@ -140,6 +164,23 @@ install(){
         echo -n "Copying caddy binary to /$GOPATH/bin [SUCCESS]"
         echo ""
     fi
+}
+
+install(){
+    check_go_path
+    update_caddy
+
+    url=$1
+    directive=$2
+
+    # special case :: if installing hugo plugin, make sure to install hugo 1st
+    if [ $url == "github.com/hacdias/filemanager/caddy/hugo" ]; then
+        install_hugo
+    fi
+
+    install_plugin $url
+    update_caddy_plugin_imports_and_directives $url $directive
+    rebuild_caddy
 }
 
 ## START ##
