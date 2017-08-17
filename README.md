@@ -17,14 +17,102 @@
 
 
 ## usage
-- ```./caddyman {url} {directive}```
-    - url (required) i.e ```github.com/itsyouonline/caddy-integration/oauth```
-    - directive (not required unless plugin needs it) ```oauth```
+-
+```
+./caddyman
+usage: cadyman list                           (list available plugins)
+               install plugin_name            (install plugin by its name)
+               install_url url {directive}    (install plugin by url)
+
+```
 
 
 ## examples
-```bash
-chmod u+x caddyman
-./caddyman.sh github.com/abiosoft/caddy-git
-./caddyman.sh github.com/itsyouonline/caddy-integration/oauth oauth
+
+- List all available plugins that you can install by just name
 ```
+    hamdy@hamdy:~/go/src/caddyman$ ./caddyman.sh list
+    [upload] blitznote.com/src/caddy.upload
+    [search] github.com/pedronasser/caddy-search
+    [datadog] github.com/payintech/caddy-datadog
+    [nobots] github.com/Xumeiquer/nobots
+    [multipass] github.com/namsral/multipass/caddy
+    [cache] github.com/nicolasazrak/caddy-cache
+    [locale] github.com/simia-tech/caddy-locale
+    [hugo] github.com/hacdias/filemanager/caddy/hugo
+    [ipfilter] github.com/pyed/ipfilter
+    [cors] github.com/captncraig/cors/caddy
+    [reauth] github.com/freman/caddy-reauth
+    [grpc] github.com/pieterlouw/caddy-grpc
+    [jsonp] github.com/pschlump/caddy-jsonp
+    [expires] github.com/epicagency/caddy-expires
+    [proxyprotocol] github.com/mastercactapus/caddy-proxyprotocol
+    [git] github.com/abiosoft/caddy-git
+    [minify] github.com/hacdias/caddy-minify
+    [gopkg] github.com/zikes/gopkg
+    [authz] github.com/casbin/caddy-authz
+    [filemanager] github.com/hacdias/filemanager/caddy/filemanager
+    [iyo] github.com/itsyouonline/caddy-integration/oauth
+    [realip] github.com/captncraig/caddy-realip
+    [mailout] github.com/SchumacherFM/mailout
+    [webdav] github.com/hacdias/caddy-webdav
+    [restic] github.com/restic/caddy
+    [awslambda] github.com/coopernurse/caddy-awslambda
+    [filter] github.com/echocat/caddy-filter
+    [jekyll] github.com/hacdias/filemanager/caddy/jekyll
+    [prometheus] github.com/miekg/caddy-prometheus
+    [awses] github.com/miquella/caddy-awses
+    [cgi] github.com/jung-kurt/caddy-cgi
+    [ratelimit] github.com/xuqingfeng/caddy-rate-limit
+    [jwt] github.com/BTBurke/caddy-jwt
+    [login] github.com/tarent/loginsrv/caddy
+
+````
+
+
+- Install a plugin by name
+```
+    hamdy@hamdy:~/go/src/caddyman$ ./caddyman.sh install hugo
+    Using GPATH : /home/hamdy/go
+    Ensuring Caddy is up2date [SUCCESS]
+    github.com/hacdias/filemanager/caddy/hugo
+    Getting plugin [SUCCESS]
+    Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+    Copying caddy binary to //home/hamdy/go/bin [SUCCESS]
+
+```
+
+- Trying to install a non-existent plugin name
+```
+    hamdy@hamdy:~/go/src/caddyman$ ./caddyman.sh install hugosss
+    Plugin name is not recognized
+
+```
+
+- For non supported plugins (not in ```./caddyman list```, you can provide the plugin url
+    - Following example, iyo plugin needs a directive called ```oauth``` ```
+./caddyman.sh install_by_url github.com/itsyouonline/caddy-integration/oauth oauth```
+    - Another example for a plugin that doesn't require a directive ```./caddyman.sh install_by_url github.com/abiosoft/caddy-git```
+
+
+## some useful plugins with full examples
+- **filemanager**
+    ```
+    ./caddyman install filemanager
+    mkdir fm
+    cd fm
+    # create Caddyfile with the following content
+    cat > Caddyfile
+
+    http://localhost:2015
+
+    filemanager {
+            database        db
+            no_auth
+    }
+    ctrl + D
+
+    # Run caddy
+    caddy
+    ```
+    ![File Manager](assets/fileman.png)
