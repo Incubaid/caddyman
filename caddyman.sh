@@ -59,10 +59,9 @@ check_go_path(){
 # Update Caddy source
 update_caddy(){
     CADDY_GO_PACKAGE=github.com/mholt/caddy
-    echo -ne "Ensuring Caddy is up2date \r"
+    echo -ne "Ensuring Caddy is up-to-date \r"
     go get $CADDY_GO_PACKAGE
-    echo -n "Ensuring Caddy is up2date [SUCCESS]"
-    echo ""
+    echo "Ensuring Caddy is up-to-date [SUCCESS]"
 }
 
 
@@ -100,8 +99,7 @@ install_hugo(){
     echo -ne "Installing Hugo \r"
     go get github.com/gohugoio/hugo
     go get -u github.com/gohugoio/hugo
-    echo -ne "Installing Hugo [SUCCESS]"
-    echo ""
+    echo "Installing Hugo [SUCCESS]"
 }
 
 install_plugin(){
@@ -145,19 +143,18 @@ rebuild_caddy(){
     cd $CADDY_PATH/caddy
     echo -ne "Ensure caddy build system dependencies\r"
     go get -v github.com/caddyserver/buildworker/cmd/buildworker
-    echo -ne "Ensure caddy build system dependencies [SUCCESS]\r"
+    echo "Ensure caddy build system dependencies [SUCCESS]"
 
     echo -ne "Rebuilding caddy binary\r"
     go run build.go
-    echo -ne "Rebuilding caddy binary [SUCCESS]\r"
+    echo "Rebuilding caddy binary [SUCCESS]"
 
     if pgrep -x "caddy" > /dev/null
 
     then
-        echo -ne "Caddy is Rnning .. Stopping process\r"
+        echo -ne "Caddy is Running .. Stopping process\r"
         kill -9 `pgrep -x caddy` > /dev/null
-        echo -ne "Caddy is Rnning .. Stopping process [SUCCESS]\r"
-        echo ""
+        echo "Caddy is Running .. Stopping process [SUCCESS]"
     fi
 
     cp caddy /$GOPATH/bin
