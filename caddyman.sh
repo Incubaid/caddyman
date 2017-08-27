@@ -125,12 +125,14 @@ update_caddy_plugin_imports_and_directives(){
 
     echo -ne 'Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go\r'
     sed -i "s%This is where other plugins get plugged in (imported)%This is where other plugins get plugged in (imported)\n_ \"$url\"%g" $MAIN_FILE
+    gofmt -w $MAIN_FILE
     echo -ne 'Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]\r'
     echo ""
 
     if [ ! $directive == "" ]; then
         echo -ne "Updating plugin directive in $PLUGINS_FILE\r"
         sed -i "/\"prometheus\",/a \"$directive\"," $PLUGINS_FILE
+        gofmt -w $MAIN_FILE
         echo -ne "Updating plugin directive in $PLUGINS_FILE [SUCCESS]\r"
         echo ""
     fi
