@@ -26,6 +26,7 @@ declare -A plugins_urls=(
     ["prometheus"]="github.com/miekg/caddy-prometheus"
     ["cgi"]="github.com/jung-kurt/caddy-cgi"
     ["filemanager"]="github.com/hacdias/filemanager/caddy/filemanager"
+    ["iyofilemanager"]="github.com/itsyouonline/filemanager/caddy/filemanager"
     ["webdav"]="github.com/hacdias/caddy-webdav"
     ["jekyll"]="github.com/hacdias/filemanager/caddy/jekyll"
     ["hugo"]="github.com/hacdias/filemanager/caddy/hugo"
@@ -98,7 +99,7 @@ install_hugo(){
 
     echo -ne "Installing Hugo \r"
     go get github.com/gohugoio/hugo
-    go get -u  github.com/gohugoio/hugo
+    go get -u github.com/gohugoio/hugo
     echo -ne "Installing Hugo [SUCCESS]"
     echo ""
 }
