@@ -142,8 +142,12 @@ rebuild_caddy(){
     CADDY_PATH=$GOPATH/src/github.com/mholt/caddy
 
     cd $CADDY_PATH/caddy
+    echo -ne "Ensure caddy build system dependencies\r"
+    go get -v github.com/caddyserver/buildworker/cmd/buildworker
+    echo -ne "Ensure caddy build system dependencies [SUCCESS]\r"
+
     echo -ne "Rebuilding caddy binary\r"
-    bash build.bash
+    go run build.go
     echo -ne "Rebuilding caddy binary [SUCCESS]\r"
 
     if pgrep -x "caddy" > /dev/null
