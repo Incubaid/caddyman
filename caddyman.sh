@@ -26,6 +26,7 @@ declare -A plugins_urls=(
     ["prometheus"]="github.com/miekg/caddy-prometheus"
     ["cgi"]="github.com/jung-kurt/caddy-cgi"
     ["filemanager"]="github.com/hacdias/filemanager/caddy/filemanager"
+    ["iyofilemanager"]="github.com/itsyouonline/filemanager/caddy/filemanager"
     ["webdav"]="github.com/hacdias/caddy-webdav"
     ["jekyll"]="github.com/hacdias/filemanager/caddy/jekyll"
     ["hugo"]="github.com/hacdias/filemanager/caddy/hugo"
@@ -58,10 +59,9 @@ check_go_path(){
 # Update Caddy source
 update_caddy(){
     CADDY_GO_PACKAGE=github.com/mholt/caddy
-    echo -ne "Ensuring Caddy is up2date \r"
+    echo -ne "Ensuring Caddy is up-to-date \r"
     go get $CADDY_GO_PACKAGE
-    echo -n "Ensuring Caddy is up2date [SUCCESS]"
-    echo ""
+    echo "Ensuring Caddy is up-to-date [SUCCESS]"
 }
 
 
@@ -98,9 +98,8 @@ install_hugo(){
 
     echo -ne "Installing Hugo \r"
     go get github.com/gohugoio/hugo
-    go get -u  github.com/gohugoio/hugo
-    echo -ne "Installing Hugo [SUCCESS]"
-    echo ""
+    go get -u github.com/gohugoio/hugo
+    echo "Installing Hugo [SUCCESS]"
 }
 
 install_plugin(){
@@ -126,12 +125,14 @@ update_caddy_plugin_imports_and_directives(){
 
     echo -ne 'Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go\r'
     sed -i "s%This is where other plugins get plugged in (imported)%This is where other plugins get plugged in (imported)\n_ \"$url\"%g" $MAIN_FILE
+    gofmt -w $MAIN_FILE
     echo -ne 'Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]\r'
     echo ""
 
     if [ ! $directive == "" ]; then
         echo -ne "Updating plugin directive in $PLUGINS_FILE\r"
         sed -i "/\"prometheus\",/a \"$directive\"," $PLUGINS_FILE
+        gofmt -w $MAIN_FILE
         echo -ne "Updating plugin directive in $PLUGINS_FILE [SUCCESS]\r"
         echo ""
     fi
@@ -142,17 +143,20 @@ rebuild_caddy(){
     CADDY_PATH=$GOPATH/src/github.com/mholt/caddy
 
     cd $CADDY_PATH/caddy
+    echo -ne "Ensure caddy build system dependencies\r"
+    go get -v github.com/caddyserver/buildworker/cmd/buildworker
+    echo "Ensure caddy build system dependencies [SUCCESS]"
+
     echo -ne "Rebuilding caddy binary\r"
     go run build.go
-    echo -ne "Rebuilding caddy binary [SUCCESS]\r"
+    echo "Rebuilding caddy binary [SUCCESS]"
 
     if pgrep -x "caddy" > /dev/null
 
     then
-        echo -ne "Caddy is Rnning .. Stopping process\r"
+        echo -ne "Caddy is Running .. Stopping process\r"
         kill -9 `pgrep -x caddy` > /dev/null
-        echo -ne "Caddy is Rnning .. Stopping process [SUCCESS]\r"
-        echo ""
+        echo "Caddy is Running .. Stopping process [SUCCESS]"
     fi
 
     cp caddy /$GOPATH/bin
