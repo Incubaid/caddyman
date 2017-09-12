@@ -144,7 +144,7 @@ rebuild_caddy(){
 
     cd $CADDY_PATH/caddy
     echo -ne "Ensure caddy build system dependencies\r"
-    go get -v github.com/caddyserver/buildworker/cmd/buildworker
+    go get -v github.com/caddyserver/builds
     echo "Ensure caddy build system dependencies [SUCCESS]"
 
     echo -ne "Rebuilding caddy binary\r"
