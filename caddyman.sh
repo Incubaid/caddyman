@@ -73,9 +73,9 @@ list(){
 
 # Print usage message
 show_usage(){
-    echo "usage: cadyman list                           (list available plugins)"
-    echo "               install plugin_name            (install plugin by its name)"
-    echo "               install_url url {directive}    (install plugin by url)"
+    echo "usage: cadyman list                                   (list available plugins)"
+    echo "               install plugin_name1 plugin_name2 ...  (install plugins by their names)"
+    echo "               install_url url {directive}            (install plugin by url)"
     exit 1
 }
 
@@ -97,13 +97,12 @@ install_plugin_by_name(){
 install_hugo(){
 
     echo -ne "Installing Hugo \r"
-    go get github.com/gohugoio/hugo
     go get -u github.com/gohugoio/hugo
     echo "Installing Hugo [SUCCESS]"
 }
 
 install_plugin(){
-    echo -ne "Getting plugin \r"
+    echo -ne "Getting plugin $1 \r"
     go get $1
 
     if [ ! $? == 0 ]; then
@@ -190,7 +189,6 @@ install(){
 
     install_plugin $url
     update_caddy_plugin_imports_and_directives $url $directive
-    rebuild_caddy
 }
 
 ## START ##
@@ -209,12 +207,15 @@ if [ $1 == "list" ]; then
     fi
 fi
 
-# Install takes plugin name
+# install takes multiple plugins names
 if [ $1 == "install" ]; then
-    if [ $# != 2 ]; then
+    if [ $# -lt 2 ]; then
         show_usage
     else
-        install_plugin_by_name $2
+        for plugin_name in ${@:2}; do
+            install_plugin_by_name ${plugin_name}
+        done
+        rebuild_caddy
     fi
 fi
 
@@ -224,5 +225,6 @@ if [ $1 == "install_url" ]; then
         show_usage
     else
         install $2 $3
+        rebuild_caddy
     fi
 fi
