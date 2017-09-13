@@ -112,6 +112,12 @@ install_plugin(){
         echo -ne "Getting plugin [SUCCESS]\r"
         echo ""
     fi
+
+    # special case :: if installing iyofilemanager plugin, make sure to checkout to master-iyo-auth branch
+    if [ $1 == "github.com/itsyouonline/filemanager/caddy/filemanager" ]; then
+        git -C $GOPATH/src/github.com/itsyouonline/filemanager checkout master-iyo-auth
+    fi
+
 }
 
 update_caddy_plugin_imports_and_directives(){
