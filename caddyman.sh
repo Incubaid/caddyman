@@ -163,7 +163,7 @@ rebuild_caddy(){
         kill -9 `pgrep -x caddy` > /dev/null
         echo "Caddy is Running .. Stopping process [SUCCESS]"
     fi
-
+    mkdir -p /$GOPATH/bin
     cp caddy /$GOPATH/bin
 
     if [ ! $? == 0 ]; then
