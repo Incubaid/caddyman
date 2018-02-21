@@ -37,12 +37,14 @@ declare -A plugins_urls=(
     ["gopkg"]="github.com/zikes/gopkg"
     ["restic"]="github.com/restic/caddy"
     ["iyo"]="github.com/itsyouonline/caddy-integration/oauth"
+    ["dns"]="github.com/coredns/coredns"
 )
 
 # Dictionary with plugin name as key, directive as value
 # This holds directives for plugins that should have directive added to caddy!
 declare -A plugins_directives=(
     ["iyo"]="oauth"
+    ["dns"]="dns"
 )
 
 # Use $GOPATH or ~/go if not set!
