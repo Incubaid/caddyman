@@ -38,6 +38,7 @@ declare -A plugins_urls=(
     ["restic"]="github.com/restic/caddy"
     ["iyo"]="github.com/itsyouonline/caddy-integration/oauth"
     ["dns"]="github.com/coredns/coredns"
+    ["wsproxy"]="github.com/arahmanhamdy/wsproxy"
 )
 
 # Dictionary with plugin name as key, directive as value
@@ -45,6 +46,7 @@ declare -A plugins_urls=(
 declare -A plugins_directives=(
     ["iyo"]="oauth"
     ["dns"]="dns"
+    ["wsproxy"]="wsproxy"
 )
 
 # Use $GOPATH or ~/go if not set!
