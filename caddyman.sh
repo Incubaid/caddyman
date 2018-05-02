@@ -38,7 +38,7 @@ declare -A plugins_urls=(
     ["restic"]="github.com/restic/caddy"
     ["iyo"]="github.com/itsyouonline/caddy-integration/oauth"
     ["dns"]="github.com/coredns/coredns"
-    ["wsproxy"]="github.com/arahmanhamdy/wsproxy"
+    ["wsproxy"]="github.com/incubaid/wsproxy"
 )
 
 # Dictionary with plugin name as key, directive as value
